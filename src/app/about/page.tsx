@@ -40,11 +40,12 @@ export default function About() {
           count as different patterns.
         </p>
       </section>
-      <aside className={styles.note}>
+      <aside className={styles.note} id="privacy">
         <strong>Privacy</strong>
         <span>
-          No account or device fingerprinting. Your browser stores an anonymous
-          player ID and local history.
+          No account is required. An anonymous player ID and local history stay
+          in your browser; Clarity records anonymous usage sessions so the
+          experiment can be improved.
         </span>
       </aside>
     </main>

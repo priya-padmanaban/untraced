@@ -49,7 +49,7 @@ export default function YouClient() {
 
   const deleteLocalData = () => {
     if (!confirm("Delete local Untraced data?")) return;
-    ["untraced-player-id", "untraced-history", "untraced-nickname", "untraced-muted"].forEach(
+    ["untraced-player-id", "untraced-history", "untraced-nickname", "untraced-muted", "untraced-analytics-consent"].forEach(
       (key) => localStorage.removeItem(key),
     );
     location.reload();
