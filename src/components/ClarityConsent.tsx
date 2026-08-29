@@ -9,15 +9,19 @@ const claritySnippet = `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c
 
 type Consent = "granted" | "denied";
 
-export default function ClarityConsent() {
-  const [consent, setConsent] = useState<Consent | null>(null);
+export default function ClarityConsent({ requiresConsent }: { requiresConsent: boolean }) {
+  const [consent, setConsent] = useState<Consent | null>(
+    requiresConsent ? null : "granted",
+  );
 
   useEffect(() => {
+    if (!requiresConsent) return;
+
     queueMicrotask(() => {
       const saved = localStorage.getItem(CONSENT_KEY);
       if (saved === "granted" || saved === "denied") setConsent(saved);
     });
-  }, []);
+  }, [requiresConsent]);
 
   const choose = (choice: Consent) => {
     localStorage.setItem(CONSENT_KEY, choice);
@@ -31,7 +35,7 @@ export default function ClarityConsent() {
           {claritySnippet}
         </Script>
       )}
-      {consent === null && (
+      {requiresConsent && consent === null && (
         <aside
           className={styles.banner}
           role="dialog"

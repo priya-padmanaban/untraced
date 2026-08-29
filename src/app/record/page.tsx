@@ -45,8 +45,8 @@ export default async function Record() {
       </div>
       <p className={styles.privacyLine}>
         Players are counted anonymously. Each browser keeps a local player ID;
-        no account is required. Anonymous usage sessions help improve the
-        experiment.
+        no account is required. Where required, Clarity asks before recording
+        anonymous usage sessions to improve the experiment.
       </p>
       <section className={styles.section}>
         <h2>Latest activity</h2>

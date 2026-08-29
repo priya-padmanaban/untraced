@@ -44,8 +44,8 @@ export default function About() {
         <strong>Privacy</strong>
         <span>
           No account is required. An anonymous player ID and local history stay
-          in your browser; Clarity records anonymous usage sessions so the
-          experiment can be improved.
+          in your browser. Where required, Clarity asks for consent before
+          recording anonymous usage sessions to improve the experiment.
         </span>
       </aside>
     </main>
