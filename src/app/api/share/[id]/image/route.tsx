@@ -28,7 +28,7 @@ export async function GET(
       }`;
   const routeColor = result.wasFirstDiscovery ? "#d8ff45" : "#ff6047";
 
-  return new ImageResponse(
+  const image = new ImageResponse(
     <div
       style={{
         width: "100%",
@@ -90,78 +90,68 @@ export async function GET(
           height: 590,
           border: "1px solid #35372f",
           background: "#11120f",
+          display: "flex",
+          overflow: "hidden",
         }}
       >
-        {positions.slice(1).map((position, index) => {
-          const previous = positions[index];
-          const dx = position.x - previous.x;
-          const dy = position.y - previous.y;
-          const length = Math.sqrt(dx * dx + dy * dy);
-          const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
+        <svg
+          width="590"
+          height="590"
+          viewBox="0 0 590 590"
+          style={{ position: "absolute", left: 0, top: 0 }}
+        >
+          {positions.slice(1).map((position, index) => {
+            const previous = positions[index];
 
-          return (
-            <div
-              key={`line-${position.dot}`}
-              style={{
-                position: "absolute",
-                left: previous.x,
-                top: previous.y,
-                width: length,
-                height: 6,
-                background: routeColor,
-                transformOrigin: "0 50%",
-                transform: `rotate(${angle}deg)`,
-                borderRadius: 9,
-              }}
+            return (
+              <line
+                key={`line-${position.dot}`}
+                x1={previous.x}
+                y1={previous.y}
+                x2={position.x}
+                y2={position.y}
+                stroke={routeColor}
+                strokeWidth="6"
+                strokeLinecap="round"
+              />
+            );
+          })}
+          {positions.map((position) => (
+            <circle
+              key={`node-${position.dot}`}
+              cx={position.x}
+              cy={position.y}
+              r="24"
+              fill="#d8ff45"
+              stroke="#0d0d0b"
+              strokeWidth="8"
             />
-          );
-        })}
-        {positions.map((position) => (
-          <div
-            key={position.dot}
-            style={{
-              position: "absolute",
-              left: position.x - 24,
-              top: position.y - 24,
-              width: 48,
-              height: 48,
-              borderRadius: 48,
-              background: "#d8ff45",
-              color: "#0d0d0b",
-              border: "8px solid #0d0d0b",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 17,
-              fontWeight: 900,
-            }}
-          >
-            {position.index + 1}
-          </div>
-        ))}
+          ))}
+        </svg>
       </div>
       <div
         style={{
           position: "absolute",
           left: 62,
           top: 136,
-          width: 280,
-          fontSize: 68,
+          width: 360,
+          fontSize: 60,
           fontWeight: 900,
           lineHeight: 0.91,
-          letterSpacing: -4,
+          letterSpacing: -2,
+          display: "flex",
+          flexDirection: "column",
         }}
       >
-        ONE LINE.
-        <br />
-        NINE DOTS.
+        <div>ONE LINE.</div>
+        <div>NINE DOTS.</div>
       </div>
       <div
         style={{
           position: "absolute",
           left: 62,
           top: 333,
-          width: 260,
+          width: 250,
           height: 8,
           background: routeColor,
         }}
@@ -175,4 +165,10 @@ export async function GET(
       },
     },
   );
+  return new Response(await image.arrayBuffer(), {
+    headers: {
+      "Content-Type": "image/png",
+      "Cache-Control": "public, max-age=31536000, immutable",
+    },
+  });
 }
