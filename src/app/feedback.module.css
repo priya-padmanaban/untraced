@@ -1,6 +1,8 @@
-.galleryFix{background:transparent;border:0}
+.galleryFix{grid-template-columns:repeat(auto-fill,minmax(180px,260px));justify-content:start;background:transparent;border:0}
 .cardFix{border:1px solid var(--rule)}
+.cardLink{display:block}
 .mineMetrics{grid-template-columns:repeat(4,1fr)}
+.mineHero{border-bottom:1px solid var(--rule)}
 .historyCompact{grid-template-columns:repeat(auto-fit,minmax(140px,220px));background:transparent}
 .historyCompact[data-count="1"]{grid-template-columns:minmax(0,260px)}
-@media(max-width:650px){.mineMetrics{grid-template-columns:repeat(2,1fr)}.mineMetrics>div:nth-child(3){border-top:1px solid var(--rule)}.historyCompact{grid-template-columns:repeat(2,minmax(0,1fr))}.historyCompact[data-count="1"]{grid-template-columns:minmax(0,220px)}}
+@media(max-width:650px){.galleryFix{grid-template-columns:repeat(2,minmax(0,1fr))}.mineMetrics{grid-template-columns:repeat(2,1fr)}.mineMetrics>div:nth-child(3){border-top:1px solid var(--rule)}.historyCompact{grid-template-columns:repeat(2,minmax(0,1fr))}.historyCompact[data-count="1"]{grid-template-columns:minmax(0,220px)}}

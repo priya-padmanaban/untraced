@@ -53,9 +53,11 @@ export default async function Record() {
         {data.recent.length ? (
           <div className={`${styles.gallery} ${feedback.galleryFix}`} data-count={data.recent.length}>
             {data.recent.map((pattern, index) => (
-              <div
-                className={`${styles.pattern} ${feedback.cardFix}`}
+              <Link
+                className={`${styles.pattern} ${feedback.cardFix} ${feedback.cardLink}`}
+                href={`/p/${pattern.ordinal}`}
                 key={`${pattern.entryAt ?? pattern.firstDiscoveredAt}-${index}`}
+                aria-label={`Open pattern #${pattern.ordinal.toLocaleString()}`}
               >
                 <MiniPattern route={pattern.route} />
                 <p className={styles.patternMeta}>
@@ -69,7 +71,7 @@ export default async function Record() {
                     pattern.entryAt ?? pattern.firstDiscoveredAt,
                   )}
                 </p>
-              </div>
+              </Link>
             ))}
           </div>
         ) : (
@@ -81,9 +83,11 @@ export default async function Record() {
         {data.popular.length ? (
           <div className={`${styles.gallery} ${feedback.galleryFix}`} data-count={data.popular.length}>
             {data.popular.map((pattern, index) => (
-              <div
-                className={`${styles.pattern} ${feedback.cardFix}`}
+              <Link
+                className={`${styles.pattern} ${feedback.cardFix} ${feedback.cardLink}`}
+                href={`/p/${pattern.ordinal}`}
                 key={`${pattern.firstDiscoveredAt}-${index}`}
+                aria-label={`Open pattern #${pattern.ordinal.toLocaleString()}`}
               >
                 <MiniPattern route={pattern.route} />
                 <p className={styles.patternMeta}>
@@ -92,7 +96,7 @@ export default async function Record() {
                   {pattern.count.toLocaleString()}{" "}
                   {pattern.count === 1 ? "entry" : "entries"}
                 </p>
-              </div>
+              </Link>
             ))}
           </div>
         ) : (

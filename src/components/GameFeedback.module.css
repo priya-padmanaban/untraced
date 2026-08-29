@@ -1,0 +1,2 @@
+.progressTrack{height:7px;overflow:visible}
+.progressTrack[data-active="true"]::after{content:"";position:absolute;z-index:2;top:50%;left:var(--marker-position);width:9px;height:9px;border:2px solid var(--ink);border-radius:50%;background:var(--accent);transform:translate(-50%,-50%);box-shadow:0 0 0 1px var(--accent)}
