@@ -5,7 +5,7 @@ import MiniPattern from "./MiniPattern";
 import styles from "@/app/content.module.css";
 import feedback from "@/app/feedback.module.css";
 
-type Entry = { route: number[]; new: boolean; at: string; count: number };
+type Entry = { route: number[]; new: boolean; ordinal?: number | null; at: string; count: number };
 const nicknamePattern = /^[\p{L}\p{N} _.'-]{1,24}$/u;
 
 function readHistory(): Entry[] {
@@ -33,6 +33,17 @@ export default function YouClient() {
 
   const firstFinds = history.filter((entry) => entry.new);
   const unique = new Set(history.map((entry) => entry.route.join("")));
+  let currentStreak = 0;
+  for (const entry of history) {
+    if (!entry.new) break;
+    currentStreak++;
+  }
+  let bestStreak = 0;
+  let run = 0;
+  for (const entry of [...history].reverse()) {
+    run = entry.new ? run + 1 : 0;
+    bestStreak = Math.max(bestStreak, run);
+  }
 
   const saveName = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -58,7 +69,7 @@ export default function YouClient() {
 
   return (
     <>
-      <div className={styles.metrics}>
+      <div className={`${styles.metrics} ${feedback.mineMetrics}`}>
         <div className={styles.metric}>
           <span>Entries</span>
           <strong>{history.length}</strong>
@@ -71,15 +82,20 @@ export default function YouClient() {
           <span>Unique patterns</span>
           <strong>{unique.size}</strong>
         </div>
+        <div className={styles.metric}>
+          <span>Best streak</span>
+          <strong>{bestStreak}</strong>
+        </div>
       </div>
       <section className={styles.section}>
         <h2>First finds</h2>
+        <p>Current streak: {currentStreak}.</p>
         {firstFinds.length ? (
           <div className={`${styles.history} ${feedback.historyCompact}`} data-count={firstFinds.length}>
             {firstFinds.map((entry, index) => (
               <div className={styles.pattern} key={`${entry.at}-${index}`}>
                 <MiniPattern route={entry.route} />
-                <p>{new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(new Date(entry.at))}</p>
+                <p>{entry.ordinal ? `#${entry.ordinal.toLocaleString()} · ` : ""}{new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(new Date(entry.at))}</p>
               </div>
             ))}
           </div>

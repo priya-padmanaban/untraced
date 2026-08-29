@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Header from "@/components/Header";
 import MiniPattern from "@/components/MiniPattern";
 import { MILESTONES } from "@/lib/constants";
@@ -45,8 +46,7 @@ export default async function Record() {
         </div>
       </div>
       <p className={styles.privacyLine}>
-        Players are anonymous; each browser uses a local player ID. Where
-        required, Clarity asks before recording anonymous usage.
+        Anonymous browser IDs count players. <Link href="/about#privacy">Privacy details.</Link>
       </p>
       <section className={styles.section}>
         <h2>Latest activity</h2>
@@ -114,7 +114,7 @@ export default async function Record() {
                 className={milestoneData ? styles.reached : styles.locked}
                 key={milestone.threshold}
               >
-                <strong>{milestone.threshold}</strong>
+                <strong>{milestone.threshold === "10% mapped" ? "10% found" : milestone.threshold}</strong>
                 {milestoneData ? (
                   <span>{exactDate.format(new Date(milestoneData.reachedAt))}</span>
                 ) : (

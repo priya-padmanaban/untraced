@@ -13,7 +13,7 @@ export default function About() {
       <header className={content.hero}>
         <p className={content.kicker}>Rules</p>
         <h1>Find a new pattern.</h1>
-        <p>There are {TOTAL_PATTERNS.toLocaleString()} valid patterns.</p>
+        <p>There are {TOTAL_PATTERNS.toLocaleString()} possible patterns.</p>
       </header>
       <section className={styles.rules}>
         <ul>
@@ -46,9 +46,8 @@ export default function About() {
       <aside className={styles.note} id="privacy">
         <strong>Privacy</strong>
         <span>
-          No account is required. An anonymous player ID and local history stay
-          in your browser. Where required, Clarity asks for consent before
-          recording anonymous usage sessions to improve the experiment.
+          No account. Your player ID and history stay in this browser. Where
+          required, Clarity asks before recording anonymous usage.
         </span>
       </aside>
     </main>
