@@ -1,7 +1,7 @@
 {
   "name": "UNTRACED",
   "short_name": "UNTRACED",
-  "description": "Draw a nine-dot pattern and see if anyone found it first.",
+  "description": "140,704 routes. One shared record. Draw one we haven’t seen.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0d0d0b",
