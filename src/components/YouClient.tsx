@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import MiniPattern from "./MiniPattern";
 import styles from "@/app/content.module.css";
+import feedback from "@/app/feedback.module.css";
 
 type Entry = { route: number[]; new: boolean; at: string; count: number };
 const nicknamePattern = /^[\p{L}\p{N} _.'-]{1,24}$/u;
@@ -74,7 +75,7 @@ export default function YouClient() {
       <section className={styles.section}>
         <h2>First finds</h2>
         {firstFinds.length ? (
-          <div className={styles.history} data-count={firstFinds.length}>
+          <div className={`${styles.history} ${feedback.historyCompact}`} data-count={firstFinds.length}>
             {firstFinds.map((entry, index) => (
               <div className={styles.pattern} key={`${entry.at}-${index}`}>
                 <MiniPattern route={entry.route} />

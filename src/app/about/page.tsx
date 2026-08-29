@@ -34,10 +34,13 @@ export default function About() {
             </svg>
           </li>
           <li>Release after all nine dots are selected.</li>
+          <li>If you release early, your selected dots stay in place. Continue from any unused dot or clear the route.</li>
+          <li>For keyboard play, Tab to a dot and press Enter or Space. Submit after all nine are selected.</li>
         </ul>
         <p>
           Direction matters. Reversed, rotated, and reflected patterns all
-          count as different patterns.
+          count as different patterns. Every discovered route receives a global
+          pattern number, shown in results and on Global.
         </p>
       </section>
       <aside className={styles.note} id="privacy">

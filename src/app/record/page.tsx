@@ -5,6 +5,7 @@ import { MILESTONES } from "@/lib/constants";
 import { formatElapsed, formatPercent, formatRelativeTime } from "@/lib/patterns";
 import { progress } from "@/server/store";
 import styles from "../content.module.css";
+import feedback from "../feedback.module.css";
 
 export const metadata: Metadata = { title: "Global" };
 export const dynamic = "force-dynamic";
@@ -51,16 +52,16 @@ export default async function Record() {
       <section className={styles.section}>
         <h2>Latest activity</h2>
         {data.recent.length ? (
-          <div className={styles.gallery} data-count={data.recent.length}>
+          <div className={`${styles.gallery} ${feedback.galleryFix}`} data-count={data.recent.length}>
             {data.recent.map((pattern, index) => (
               <div
-                className={styles.pattern}
+                className={`${styles.pattern} ${feedback.cardFix}`}
                 key={`${pattern.entryAt ?? pattern.firstDiscoveredAt}-${index}`}
               >
                 <MiniPattern route={pattern.route} />
                 <p className={styles.patternMeta}>
                   <strong>
-                    {pattern.wasFirstDiscovery ? "First find" : "Repeat entry"}
+                    #{pattern.ordinal.toLocaleString()} · {pattern.wasFirstDiscovery ? "First find" : "Repeat entry"}
                   </strong>
                   {" · "}
                   {pattern.name || "Anonymous"}
@@ -79,14 +80,16 @@ export default async function Record() {
       <section className={styles.section}>
         <h2>Most common</h2>
         {data.popular.length ? (
-          <div className={styles.gallery} data-count={data.popular.length}>
+          <div className={`${styles.gallery} ${feedback.galleryFix}`} data-count={data.popular.length}>
             {data.popular.map((pattern, index) => (
               <div
-                className={styles.pattern}
+                className={`${styles.pattern} ${feedback.cardFix}`}
                 key={`${pattern.firstDiscoveredAt}-${index}`}
               >
                 <MiniPattern route={pattern.route} />
                 <p className={styles.patternMeta}>
+                  <strong>#{pattern.ordinal.toLocaleString()}</strong>
+                  {" · "}
                   {pattern.count.toLocaleString()}{" "}
                   {pattern.count === 1 ? "entry" : "entries"}
                 </p>
