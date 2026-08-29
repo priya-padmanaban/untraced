@@ -49,6 +49,7 @@ export async function GET(
           fontSize: 23,
           fontWeight: 900,
           letterSpacing: 7,
+          display: "flex",
         }}
       >
         UNTRACED
@@ -72,11 +73,11 @@ export async function GET(
         >
           YOUR ROUTE
         </div>
-        <div style={{ fontSize: 42, fontWeight: 900, marginTop: 9 }}>
+        <div style={{ fontSize: 42, fontWeight: 900, marginTop: 9, display: "flex" }}>
           {achievement}
         </div>
         {result.personalStreak > 1 && (
-          <div style={{ color: "#aaa99f", fontSize: 20, marginTop: 9 }}>
+          <div style={{ color: "#aaa99f", fontSize: 20, marginTop: 9, display: "flex" }}>
             {result.personalStreak}-find streak
           </div>
         )}
@@ -143,8 +144,8 @@ export async function GET(
           flexDirection: "column",
         }}
       >
-        <div>ONE LINE.</div>
-        <div>NINE DOTS.</div>
+        <div style={{ display: "flex" }}>ONE LINE.</div>
+        <div style={{ display: "flex" }}>NINE DOTS.</div>
       </div>
       <div
         style={{
@@ -154,6 +155,7 @@ export async function GET(
           width: 250,
           height: 8,
           background: routeColor,
+          display: "flex",
         }}
       />
     </div>,
