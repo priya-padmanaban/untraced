@@ -26,7 +26,7 @@ export default async function Record() {
         <p className={styles.kicker}>Global status</p>
         <h1>{data.discovered.toLocaleString()} patterns found.</h1>
         <p>
-          {formatPercent(data.discovered)} mapped{" "}
+          {formatPercent(data.discovered)} found{" "}
           {formatElapsed(data.huntStartedAt)}.
         </p>
       </header>
@@ -45,9 +45,8 @@ export default async function Record() {
         </div>
       </div>
       <p className={styles.privacyLine}>
-        Players are counted anonymously. Each browser keeps a local player ID;
-        no account is required. Where required, Clarity asks before recording
-        anonymous usage sessions to improve the experiment.
+        Players are anonymous; each browser uses a local player ID. Where
+        required, Clarity asks before recording anonymous usage.
       </p>
       <section className={styles.section}>
         <h2>Latest activity</h2>

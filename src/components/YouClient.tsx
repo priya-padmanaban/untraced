@@ -89,7 +89,7 @@ export default function YouClient() {
       </section>
       <section className={styles.section}>
         <h2>Nickname</h2>
-        <p>Used on future first finds. Maximum 24 characters.</p>
+        <p>Your name appears on Global the next time you find a new pattern. It won’t change earlier finds. Maximum 24 characters.</p>
         <form className={styles.form} onSubmit={saveName}>
           <input
             aria-label="Nickname"
