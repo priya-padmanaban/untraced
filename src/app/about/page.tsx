@@ -23,14 +23,14 @@ export default function About() {
           <li className={styles.midpointRule}>
             <span>Crossing an unused middle dot selects it automatically.</span>
             <svg
-              viewBox="0 0 120 42"
+              viewBox="0 0 120 18"
               role="img"
               aria-label="A line crossing through a middle dot"
             >
-              <line x1="12" y1="21" x2="108" y2="21" />
-              <circle cx="12" cy="21" r="4" />
-              <circle cx="60" cy="21" r="5" />
-              <circle cx="108" cy="21" r="4" />
+              <line x1="12" y1="9" x2="108" y2="9" />
+              <circle cx="12" cy="9" r="4" />
+              <circle cx="60" cy="9" r="5" />
+              <circle cx="108" cy="9" r="4" />
             </svg>
           </li>
           <li>Release after all nine dots are selected.</li>
