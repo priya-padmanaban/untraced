@@ -1,0 +1,2 @@
+import postgres from "postgres";import { readFileSync,readdirSync } from "node:fs";import path from "node:path";
+if(!process.env.DATABASE_URL)throw new Error("DATABASE_URL is required");const sql=postgres(process.env.DATABASE_URL,{max:1});for(const file of readdirSync("drizzle").filter(f=>f.endsWith(".sql")).sort()){const source=readFileSync(path.join("drizzle",file),"utf8");await sql.unsafe(source)}await sql.end();console.log("Database migrations applied.");

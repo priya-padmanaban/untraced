@@ -1,0 +1,1 @@
+import Header from "@/components/Header";import styles from "./content.module.css";export default function NotFound(){return <main className={styles.shell}><Header/><header className={styles.hero}><p className={styles.kicker}>No mark here</p><h1>This page is outside the record.</h1><p>Return to the grid and leave another trace.</p></header></main>}

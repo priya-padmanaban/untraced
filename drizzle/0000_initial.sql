@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS hunt_state (id integer PRIMARY KEY CHECK (id = 1), hunt_started_at timestamptz NOT NULL DEFAULT now(), completed_at timestamptz, final_route_key text, final_discoverer_name text, next_ordinal integer NOT NULL DEFAULT 1);
+CREATE TABLE IF NOT EXISTS patterns (route_key text PRIMARY KEY, first_discovered_at timestamptz NOT NULL DEFAULT now(), first_discoverer_id uuid, first_discoverer_name text, discovery_ordinal integer NOT NULL UNIQUE, submission_count bigint NOT NULL DEFAULT 1, last_submitted_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE IF NOT EXISTS submissions (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), route_key text NOT NULL REFERENCES patterns(route_key), submitted_at timestamptz NOT NULL DEFAULT now(), player_id uuid NOT NULL, was_first_discovery boolean NOT NULL);
+CREATE TABLE IF NOT EXISTS milestones (threshold text PRIMARY KEY, discovered_count integer NOT NULL, reached_at timestamptz NOT NULL DEFAULT now());
+CREATE INDEX IF NOT EXISTS patterns_last_idx ON patterns(last_submitted_at); CREATE INDEX IF NOT EXISTS submissions_time_idx ON submissions(submitted_at); CREATE INDEX IF NOT EXISTS submissions_player_idx ON submissions(player_id);
+INSERT INTO hunt_state(id) VALUES(1) ON CONFLICT DO NOTHING;

@@ -1,0 +1,3 @@
+export type Progress={discovered:number;totalSubmissions:number;browsers:number;huntStartedAt:string;completedAt:string|null;recent:PublicPattern[];popular:PublicPattern[];milestones:{threshold:string;reachedAt:string}[]};
+export type PublicPattern={route:number[];count:number;firstDiscoveredAt:string;name:string|null};
+export type SubmitResult={isNewDiscovery:boolean;ordinal:number|null;submissionCount:number;firstDiscoveredAt:string;firstDiscovererName:string|null;discoveredTotal:number;totalSubmissions:number;personallySubmittedBefore:boolean;personal:{attempts:number;discoveries:number;distinct:number;selfRepeats:number;currentStreak:number;bestStreak:number};completedAt:string|null};

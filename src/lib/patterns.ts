@@ -1,0 +1,9 @@
+export const NODE_IDS = [1,2,3,4,5,6,7,8,9] as const;
+export type NodeId = (typeof NODE_IDS)[number];
+const skips:Record<string,NodeId>={"1-3":2,"3-1":2,"1-7":4,"7-1":4,"3-9":6,"9-3":6,"7-9":8,"9-7":8,"1-9":5,"9-1":5,"3-7":5,"7-3":5,"2-8":5,"8-2":5,"4-6":5,"6-4":5};
+export const requiredMidpoint=(a:number,b:number)=>skips[`${a}-${b}`];
+export function isValidRoute(value:unknown):value is NodeId[]{if(!Array.isArray(value)||value.length!==9)return false;const seen=new Set<number>();for(let i=0;i<value.length;i++){const node=value[i];if(!Number.isInteger(node)||node<1||node>9||seen.has(node))return false;if(i){const mid=requiredMidpoint(value[i-1],node);if(mid&&!seen.has(mid))return false}seen.add(node)}return true}
+export function enumerateRoutes():NodeId[][]{const output:NodeId[][]=[];const visit=(route:NodeId[],seen:Set<NodeId>)=>{if(route.length===9){output.push([...route]);return}for(const next of NODE_IDS){if(seen.has(next))continue;const mid=route.length?requiredMidpoint(route.at(-1)!,next):undefined;if(mid&&!seen.has(mid))continue;seen.add(next);route.push(next);visit(route,seen);route.pop();seen.delete(next)}};visit([],new Set());return output}
+export const routeKey=(route:NodeId[])=>route.join("");
+export function formatPercent(count:number){if(count>=140704)return "100%";const raw=count/140704*100;const digits=raw>=99?Math.min(6,Math.max(3,Math.ceil(-Math.log10(Math.max(0.000001,100-raw)))+2)):2;return `${Math.min(raw,99.999999).toFixed(digits)}%`}
+export function crossedNodes(from:{x:number;y:number},to:{x:number;y:number},centers:{id:NodeId;x:number;y:number}[],radius:number){const dx=to.x-from.x,dy=to.y-from.y,len2=dx*dx+dy*dy;return centers.map(c=>{const t=len2?Math.max(0,Math.min(1,((c.x-from.x)*dx+(c.y-from.y)*dy)/len2)):0;const x=from.x+t*dx,y=from.y+t*dy;return {...c,t,d:Math.hypot(c.x-x,c.y-y)}}).filter(c=>c.d<=radius).sort((a,b)=>a.t-b.t).map(c=>c.id)}
