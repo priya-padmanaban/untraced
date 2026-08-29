@@ -1,3 +1,131 @@
-import type { Metadata } from "next";import Header from "@/components/Header";import MiniPattern from "@/components/MiniPattern";import { formatPercent } from "@/lib/patterns";import { progress } from "@/server/store";import styles from "../content.module.css";
-export const metadata:Metadata={title:"Global"};export const dynamic="force-dynamic";const duration=(start:string)=>{const hours=Math.max(0,(Date.now()-new Date(start).getTime())/36e5);return hours<48?`${Math.floor(hours)} hours`:`${Math.floor(hours/24)} days`};
-export default async function Record(){const d=await progress();return <main className={styles.shell}><Header/><header className={styles.hero}><p className={styles.kicker}>Global status</p><h1>{d.discovered.toLocaleString()} patterns found.</h1><p>{formatPercent(d.discovered)} complete after {duration(d.huntStartedAt)}.</p></header><div className={styles.metrics}><div className={styles.metric}><span>Unique patterns</span><strong>{d.discovered.toLocaleString()}</strong></div><div className={styles.metric}><span>Total entries</span><strong>{d.totalSubmissions.toLocaleString()}</strong></div><div className={styles.metric}><span>Browsers</span><strong>{d.browsers.toLocaleString()}</strong></div></div><section className={styles.section}><h2>Latest</h2>{d.recent.length?<div className={styles.gallery}>{d.recent.map((p,i)=><div className={styles.pattern} key={`${p.firstDiscoveredAt}-${i}`}><MiniPattern route={p.route}/><p>{p.name||"Anonymous"} · {new Intl.DateTimeFormat("en",{dateStyle:"medium"}).format(new Date(p.firstDiscoveredAt))}</p></div>)}</div>:<p className={styles.empty}>No entries yet.</p>}</section><section className={styles.section}><h2>Most common</h2>{d.popular.length?<div className={styles.gallery}>{d.popular.map((p,i)=><div className={styles.pattern} key={`${p.firstDiscoveredAt}-${i}`}><MiniPattern route={p.route}/><p>{p.count.toLocaleString()} entries</p></div>)}</div>:<p className={styles.empty}>No frequency data yet.</p>}</section><section className={styles.section}><h2>Milestones</h2>{d.milestones.length?<ol className={styles.milestones}>{d.milestones.map(m=><li key={m.threshold}><strong>{m.threshold}</strong><span>{new Intl.DateTimeFormat("en",{dateStyle:"long",timeStyle:"short"}).format(new Date(m.reachedAt))}</span></li>)}</ol>:<p className={styles.empty}>None reached yet.</p>}</section></main>}
+import type { Metadata } from "next";
+import Header from "@/components/Header";
+import MiniPattern from "@/components/MiniPattern";
+import { MILESTONES } from "@/lib/constants";
+import { formatElapsed, formatPercent, formatRelativeTime } from "@/lib/patterns";
+import { progress } from "@/server/store";
+import styles from "../content.module.css";
+
+export const metadata: Metadata = { title: "Global" };
+export const dynamic = "force-dynamic";
+
+const exactDate = new Intl.DateTimeFormat("en", {
+  dateStyle: "long",
+  timeStyle: "short",
+});
+
+export default async function Record() {
+  const data = await progress();
+  const reached = new Map(data.milestones.map((milestone) => [milestone.threshold, milestone]));
+
+  return (
+    <main className={styles.shell}>
+      <Header />
+      <header className={styles.hero}>
+        <p className={styles.kicker}>Global status</p>
+        <h1>{data.discovered.toLocaleString()} patterns found.</h1>
+        <p>
+          {formatPercent(data.discovered)} mapped{" "}
+          {formatElapsed(data.huntStartedAt)}.
+        </p>
+      </header>
+      <div className={styles.metrics}>
+        <div className={styles.metric}>
+          <span>Unique patterns</span>
+          <strong>{data.discovered.toLocaleString()}</strong>
+        </div>
+        <div className={styles.metric}>
+          <span>Total entries</span>
+          <strong>{data.totalSubmissions.toLocaleString()}</strong>
+        </div>
+        <div className={styles.metric}>
+          <span>Players</span>
+          <strong>{data.browsers.toLocaleString()}</strong>
+        </div>
+      </div>
+      <p className={styles.privacyLine}>
+        Players are counted anonymously. Each browser keeps a local player ID;
+        no account is required.
+      </p>
+      <section className={styles.section}>
+        <h2>Latest activity</h2>
+        {data.recent.length ? (
+          <div className={styles.gallery} data-count={data.recent.length}>
+            {data.recent.map((pattern, index) => (
+              <div
+                className={styles.pattern}
+                key={`${pattern.entryAt ?? pattern.firstDiscoveredAt}-${index}`}
+              >
+                <MiniPattern route={pattern.route} />
+                <p className={styles.patternMeta}>
+                  <strong>
+                    {pattern.wasFirstDiscovery ? "First find" : "Repeat entry"}
+                  </strong>
+                  {" · "}
+                  {pattern.name || "Anonymous"}
+                  {" · "}
+                  {formatRelativeTime(
+                    pattern.entryAt ?? pattern.firstDiscoveredAt,
+                  )}
+                </p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className={styles.empty}>No entries yet. The first line is waiting.</p>
+        )}
+      </section>
+      <section className={styles.section}>
+        <h2>Most common</h2>
+        {data.popular.length ? (
+          <div className={styles.gallery} data-count={data.popular.length}>
+            {data.popular.map((pattern, index) => (
+              <div
+                className={styles.pattern}
+                key={`${pattern.firstDiscoveredAt}-${index}`}
+              >
+                <MiniPattern route={pattern.route} />
+                <p className={styles.patternMeta}>
+                  {pattern.count.toLocaleString()}{" "}
+                  {pattern.count === 1 ? "entry" : "entries"}
+                </p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className={styles.emptyState}>
+            <strong>No repeat yet.</strong>
+            <p>No pattern has been entered twice yet.</p>
+          </div>
+        )}
+      </section>
+      <section className={styles.section}>
+        <h2>Milestones</h2>
+        <ol className={styles.milestones}>
+          {MILESTONES.map((milestone) => {
+            const milestoneData = reached.get(milestone.threshold);
+            const remaining = milestone.count - data.discovered;
+
+            return (
+              <li
+                className={milestoneData ? styles.reached : styles.locked}
+                key={milestone.threshold}
+              >
+                <strong>{milestone.threshold}</strong>
+                {milestoneData ? (
+                  <span>{exactDate.format(new Date(milestoneData.reachedAt))}</span>
+                ) : (
+                  <span>
+                    {remaining > 0
+                      ? `${remaining.toLocaleString()} to go`
+                      : "Ready to record"}
+                  </span>
+                )}
+              </li>
+            );
+          })}
+        </ol>
+      </section>
+    </main>
+  );
+}

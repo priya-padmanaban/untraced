@@ -1,2 +1,52 @@
-import type { Metadata } from "next";import Header from "@/components/Header";import content from "../content.module.css";import styles from "./about.module.css";export const metadata:Metadata={title:"Rules"};
-export default function About(){return <main className={content.shell}><Header/><header className={content.hero}><p className={content.kicker}>Rules</p><h1>Find a new pattern.</h1><p>There are 140,704 valid answers.</p></header><section className={styles.rules}><ul><li>Start on any dot.</li><li>Drag through all nine dots.</li><li>Use each dot only once.</li><li>Crossing an unused middle dot selects it automatically.</li><li>Release after all nine dots are selected.</li></ul><p>Reversed, rotated, and reflected patterns count as different answers.</p></section><aside className={styles.note}><strong>Privacy</strong><span>No account or device fingerprinting. Your browser stores a random ID and local history.</span></aside></main>}
+import type { Metadata } from "next";
+import Header from "@/components/Header";
+import { TOTAL_PATTERNS } from "@/lib/constants";
+import content from "../content.module.css";
+import styles from "./about.module.css";
+
+export const metadata: Metadata = { title: "Rules" };
+
+export default function About() {
+  return (
+    <main className={content.shell}>
+      <Header />
+      <header className={content.hero}>
+        <p className={content.kicker}>Rules</p>
+        <h1>Find a new pattern.</h1>
+        <p>There are {TOTAL_PATTERNS.toLocaleString()} valid patterns.</p>
+      </header>
+      <section className={styles.rules}>
+        <ul>
+          <li>Start on any dot.</li>
+          <li>Drag through all nine dots.</li>
+          <li>Use each dot only once.</li>
+          <li className={styles.midpointRule}>
+            <span>Crossing an unused middle dot selects it automatically.</span>
+            <svg
+              viewBox="0 0 120 42"
+              role="img"
+              aria-label="A line crossing through a middle dot"
+            >
+              <line x1="12" y1="21" x2="108" y2="21" />
+              <circle cx="12" cy="21" r="4" />
+              <circle cx="60" cy="21" r="5" />
+              <circle cx="108" cy="21" r="4" />
+            </svg>
+          </li>
+          <li>Release after all nine dots are selected.</li>
+        </ul>
+        <p>
+          Direction matters. Reversed, rotated, and reflected patterns all
+          count as different patterns.
+        </p>
+      </section>
+      <aside className={styles.note}>
+        <strong>Privacy</strong>
+        <span>
+          No account or device fingerprinting. Your browser stores an anonymous
+          player ID and local history.
+        </span>
+      </aside>
+    </main>
+  );
+}

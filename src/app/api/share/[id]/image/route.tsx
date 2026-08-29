@@ -22,10 +22,11 @@ export async function GET(
     y: 112 + Math.floor((dot - 1) / 3) * 185,
   }));
   const achievement = result.wasFirstDiscovery
-    ? `FIRST FINDER  ·  #${result.discoveryOrdinal.toLocaleString()}`
+    ? `FIRST FIND  ·  #${result.discoveryOrdinal.toLocaleString()}`
     : `SEEN ${result.routeSubmissionCount.toLocaleString()} ${
         result.routeSubmissionCount === 1 ? "TIME" : "TIMES"
       }`;
+  const routeColor = result.wasFirstDiscovery ? "#d8ff45" : "#ff6047";
 
   return new ImageResponse(
     <div
@@ -107,7 +108,7 @@ export async function GET(
                 top: previous.y,
                 width: length,
                 height: 6,
-                background: "#ff6047",
+                background: routeColor,
                 transformOrigin: "0 50%",
                 transform: `rotate(${angle}deg)`,
                 borderRadius: 9,
@@ -162,7 +163,7 @@ export async function GET(
           top: 333,
           width: 260,
           height: 8,
-          background: "#ff6047",
+          background: routeColor,
         }}
       />
     </div>,
