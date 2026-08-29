@@ -18,7 +18,8 @@ export default function About() {
       <section className={styles.rules}>
         <ul>
           <li>Start on any dot.</li>
-          <li>Drag through all nine dots.</li>
+          <li>With a pointer, drag through all nine dots and release to check the pattern.</li>
+          <li>With a keyboard, Tab to each dot and press Enter or Space. Select Submit after all nine.</li>
           <li>Use each dot only once.</li>
           <li className={styles.midpointRule}>
             <span>Crossing an unused middle dot selects it automatically.</span>
@@ -33,9 +34,7 @@ export default function About() {
               <circle cx="108" cy="9" r="4" />
             </svg>
           </li>
-          <li>Release after all nine dots are selected.</li>
           <li>If you release early, your selected dots stay in place. Continue from any unused dot or clear the route.</li>
-          <li>For keyboard play, Tab to a dot and press Enter or Space. Submit after all nine are selected.</li>
         </ul>
         <p>
           Direction matters. Reversed, rotated, and reflected patterns all
