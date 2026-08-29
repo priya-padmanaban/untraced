@@ -1,0 +1,3 @@
+"use client";
+import { useState } from "react";
+export default function ShareButton({shareId,isNew,ordinal}:Readonly<{shareId:string;isNew:boolean;ordinal:number|null}>){const[copied,setCopied]=useState(false);const share=async()=>{const url=`${location.origin}/s/${shareId}`,text=isNew?`I found pattern #${ordinal?.toLocaleString()} on UNTRACED 09.`:"My UNTRACED 09 result.";try{if(navigator.share)await navigator.share({title:"UNTRACED 09",text,url});else{await navigator.clipboard.writeText(url);setCopied(true);setTimeout(()=>setCopied(false),1800)}}catch{}};return <button onClick={()=>void share()}>{copied?"Link copied":"Share result"}</button>}
