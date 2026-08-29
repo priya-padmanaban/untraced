@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { PersonalHistoryEntry } from "@/lib/types";
 import MiniPattern from "./MiniPattern";
 import styles from "@/app/content.module.css";
 import feedback from "@/app/feedback.module.css";
 
-type Entry = { route: number[]; new: boolean; ordinal?: number | null; at: string; count: number };
+type Entry = Omit<PersonalHistoryEntry, "ordinal"> & { ordinal?: number | null };
 const nicknamePattern = /^[\p{L}\p{N} _.'-]{1,24}$/u;
 
 function readHistory(): Entry[] {
@@ -25,10 +26,28 @@ export default function YouClient() {
   const [notice, setNotice] = useState("");
 
   useEffect(() => {
+    const controller = new AbortController();
     queueMicrotask(() => {
       setHistory(readHistory());
       setName(localStorage.getItem("untraced-nickname") || "");
+      const playerId = localStorage.getItem("untraced-player-id");
+      if (!playerId) return;
+      void fetch("/api/history", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ playerId }),
+        cache: "no-store",
+        signal: controller.signal,
+      }).then(async (response) => {
+        if (!response.ok) return;
+        const data: unknown = await response.json();
+        if (typeof data !== "object" || data === null || !("entries" in data) || !Array.isArray(data.entries)) return;
+        const entries = data.entries as PersonalHistoryEntry[];
+        setHistory(entries);
+        localStorage.setItem("untraced-history", JSON.stringify(entries.slice(0, 150)));
+      }).catch(() => undefined);
     });
+    return () => controller.abort();
   }, []);
 
   const firstFinds = history.filter((entry) => entry.new);
