@@ -5,7 +5,7 @@ import "./globals.css";
 import "./theme.css";
 import "./typography.css";
 const origin=process.env.NEXT_PUBLIC_SITE_URL||"http://localhost:3000";
-export const metadata:Metadata={metadataBase:new URL(origin),title:{default:"UNTRACED",template:"%s · UNTRACED"},description:"140,704 routes. One shared record. Draw one we haven’t seen.",manifest:"/manifest.webmanifest",openGraph:{title:"UNTRACED",description:"140,704 routes. One shared record. Draw one we haven’t seen.",images:[{url:"/og.png",width:1536,height:1024}]},twitter:{card:"summary_large_image",title:"UNTRACED",description:"140,704 routes. One shared record. Draw one we haven’t seen.",images:["/og.png"]}};
+export const metadata:Metadata={metadataBase:new URL(origin),title:{default:"UNTRACED",template:"%s · UNTRACED"},description:"140,704 routes. One shared record. Draw one we haven’t seen.",manifest:"/manifest.webmanifest",openGraph:{title:"UNTRACED",description:"140,704 routes. One shared record. Draw one we haven’t seen.",images:[{url:"/og.png",width:1729,height:910}]},twitter:{card:"summary_large_image",title:"UNTRACED",description:"140,704 routes. One shared record. Draw one we haven’t seen.",images:["/og.png"]}};
 
 const consentRegions = new Set([
   "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR",
