@@ -1,31 +1,21 @@
 # Untraced
 
-Untraced is a communal web game for discovering all **140,704** valid Android-style nine-dot patterns that use every node exactly once. Players draw without seeing which routes remain; the server reveals whether a completed trace is a global first or a repeat.
+**140,704 routes. One shared record. Draw one we haven’t seen.**
 
-## Rules and correctness
+Untraced is a communal nine-dot pattern hunt. Draw through every dot once and the site tells you whether you found a new route or repeated somebody else’s.
 
-Nodes are numbered left-to-right, top-to-bottom. A move crossing the midpoint of a row, column, or long diagonal is legal only after that midpoint has been visited. The drawing surface reproduces Android behavior by automatically acquiring an unused midpoint when the pointer crosses it. Direction, rotation, and reflection remain distinct.
+Direction, rotation, and reflection all count separately. Crossing an unused middle dot selects it automatically, just like an Android lock screen.
 
-`src/lib/patterns.ts` contains the pure authoritative validator, pointer-segment intersection helper, and an independent exhaustive enumerator. The unit suite asserts exactly 140,704 unique nine-node routes.
+## Run it locally
 
-## Stack
+```sh
+npm install
+npm run dev
+```
 
-- Next.js App Router, React, and TypeScript
-- PostgreSQL in production through `postgres`; ordinary Vercel-compatible Postgres works (Neon is a good default)
-- Drizzle schema and checked-in SQL migration
-- SQLite development adapter in `.data/untraced.sqlite`, requiring no credentials
-- Zod-compatible strict request shape plus server-side route validation
-- Vitest and Playwright
+Open `http://localhost:3000`. Local development uses SQLite at `.data/untraced.sqlite`, so no database setup is needed.
 
-PostgreSQL submissions run inside a transaction while locking the single hunt-state row. This serializes ordinal allocation, ensures simultaneous copies of the same undiscovered route produce one first discovery, inserts milestone rows idempotently, and freezes completion exactly once. The public APIs expose recent/popular *discovered* geometry only—never missing routes or the full discovered set.
-
-## Local setup
-
-1. Copy `.env.example` to `.env.local`. The defaults use local SQLite.
-2. Run `npm install`.
-3. Run `npm run dev` and open `http://localhost:3000`.
-
-Local development creates `.data/untraced.sqlite` automatically. Load deliberate states with:
+Want some fake progress?
 
 ```sh
 npm run db:seed -- empty
@@ -36,21 +26,35 @@ npm run db:seed -- one-remaining
 npm run db:seed -- completed
 ```
 
-The seed script refuses production use unless `ALLOW_PRODUCTION_SEED=true`; PostgreSQL fixture resets are intentionally omitted to keep the shared record safe.
+Fixtures are local-only. The seed script refuses to touch PostgreSQL.
 
-## Production database and Vercel
+## Stack
 
-Create a PostgreSQL database, set `DATABASE_URL`, `UNTRACED_DATABASE=postgres`, a strong `RATE_LIMIT_SECRET`, and the canonical `NEXT_PUBLIC_SITE_URL`. Apply the schema before the first deployment:
+- Next.js, React, and TypeScript
+- PostgreSQL in production; SQLite locally
+- Drizzle migrations
+- Vitest and Playwright
+
+The pattern rules live in `src/lib/patterns.ts`. Tests independently enumerate all 140,704 valid routes. Production submissions are transactional, so concurrent discoveries still get one first finder and one ordinal.
+
+## Production
+
+Copy `.env.example` to `.env.local` and set:
+
+- `DATABASE_URL`
+- `UNTRACED_DATABASE=postgres`
+- `RATE_LIMIT_SECRET`
+- `NEXT_PUBLIC_SITE_URL`
+
+Then apply the schema:
 
 ```sh
 npm run db:migrate
 ```
 
-Deploy the resulting Next.js project to Vercel normally. The database must support transactions, row locks, UUID generation (`gen_random_uuid()`), and standard PostgreSQL `ON CONFLICT`. All timestamps are stored in UTC and formatted in the browser.
+The app is set up for a normal Vercel deployment with a PostgreSQL database.
 
-The in-process production rate limiter allows a modest human burst and is isolated in `src/server/rate-limit.ts`. For multi-instance deployments, replace its map with Vercel KV/Upstash or another short-lived shared store without changing submission logic. Development deliberately bypasses throttling.
-
-## Verification
+## Check your work
 
 ```sh
 npm run lint
@@ -60,10 +64,8 @@ npm run test:e2e
 npm run build
 ```
 
-Playwright browser binaries may be installed with `npx playwright install chromium`. Tests cover enumeration, every midpoint relationship in both directions, malformed routes, fast-pointer midpoint acquisition, transformations remaining distinct, percentage formatting, repeat/concurrent submission invariants, milestone/completion idempotence, the home interaction, incomplete traces, mobile rendering, and secondary routes.
+If Playwright needs a browser, run `npx playwright install chromium`.
 
-## Privacy and moderation
+## Privacy
 
-The browser creates a random UUID and keeps personal history, nickname, and mute preference locally. Accepted submissions associate that UUID with server aggregates. It is a browser/device convenience identifier, not authentication or a count of humans. No fingerprinting, location, email, advertising ID, or durable raw IP storage is used. Optional nicknames are restricted to 24 conservative characters and rendered as text. To hide an inappropriate attribution for MVP, set `first_discoverer_name` to `NULL` directly in `patterns`; the historical route remains intact.
-
-No commits, pushes, repository creation, or deployments were performed by Codex.
+No accounts. Each browser gets a random player ID and keeps its nickname, settings, and recent history locally. Submissions are associated with that anonymous ID so Mine can restore the browser’s history and pattern numbers. There’s no fingerprinting, email, location tracking, or durable raw IP storage.
