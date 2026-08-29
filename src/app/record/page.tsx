@@ -61,11 +61,14 @@ export default async function Record() {
               >
                 <MiniPattern route={pattern.route} />
                 <p className={styles.patternMeta}>
-                  <strong>
-                    #{pattern.ordinal.toLocaleString()} · {pattern.wasFirstDiscovery ? "First find" : "Repeat entry"}
-                  </strong>
-                  {" · "}
-                  {pattern.name || "Anonymous"}
+                  {pattern.wasFirstDiscovery ? <>
+                    <strong>#{pattern.ordinal.toLocaleString()} · First find</strong>
+                    {" · "}{pattern.name || "Anonymous"}
+                  </> : <>
+                    <strong>Repeat of #{pattern.ordinal.toLocaleString()}</strong>
+                    {" · First found by "}{pattern.name || "Anonymous"}
+                    {` · Now ${pattern.count.toLocaleString()} ${pattern.count === 1 ? "entry" : "entries"}`}
+                  </>}
                   {" · "}
                   {formatRelativeTime(
                     pattern.entryAt ?? pattern.firstDiscoveredAt,

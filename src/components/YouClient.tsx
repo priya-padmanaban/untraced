@@ -114,7 +114,7 @@ export default function YouClient() {
             {firstFinds.map((entry, index) => (
               <div className={styles.pattern} key={`${entry.at}-${index}`}>
                 <MiniPattern route={entry.route} />
-                <p>{entry.ordinal ? `#${entry.ordinal.toLocaleString()} · ` : ""}{new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(new Date(entry.at))}</p>
+                <p>{entry.ordinal ? `#${entry.ordinal.toLocaleString()} · ` : ""}{entry.count.toLocaleString()} {entry.count === 1 ? "entry" : "entries"} · {new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(new Date(entry.at))}</p>
               </div>
             ))}
           </div>
